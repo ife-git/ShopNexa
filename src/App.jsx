@@ -37,7 +37,9 @@ export default function App() {
       <div className="button-container">
         <div className="left-nav">
           <div className="home-icon">
-            <img src={Logo} alt="Shop Nexa" className="logo-img" />{" "}
+            <Link to="/" className="button">
+              <img src={Logo} alt="Shop Nexa" className="logo-img" />
+            </Link>
           </div>
 
           <Link to="/" className="button">

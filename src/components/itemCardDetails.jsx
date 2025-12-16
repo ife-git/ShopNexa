@@ -1,3 +1,51 @@
 import React from "react";
 
-export default function ItemCardDetails() {}
+export default function ItemCardDetails({ product, onClose, addToCart }) {
+  const [quantity, setQuantity] = React.useState(1);
+
+  function plus() {
+    setQuantity((q) => q + 1);
+  }
+
+  function minus() {
+    setQuantity((q) => Math.max(1, q));
+  }
+  function handleAddToCart() {
+    addToCart({ ...product, quantity: quantity });
+    console.log(
+      `${product.title} has been added to cart. It costs $${
+        product.price * quantity
+      }. It was added ${quantity} times`
+    );
+    onClose();
+  }
+
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+        <button className="close-btn" onClick={onClose}>
+          ✕
+        </button>
+
+        <img src={product.thumbnail} alt={product.title} />
+        <h2>{product.title}</h2>
+        <p>${product.price}</p>
+        <p>{product.description}</p>
+
+        <div className="detail-buttons">
+          <button className="quant-btn" onClick={minus}>
+            {" "}
+            -{" "}
+          </button>
+          <button className="add-to-cart-btn" onClick={handleAddToCart}>
+            Add to Cart 🛒 {quantity}
+          </button>
+          <button className="quant-btn" onClick={plus}>
+            {" "}
+            +{" "}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

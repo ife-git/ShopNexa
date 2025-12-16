@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ItemCard from "./itemCard";
+import ItemCardDetails from "./itemCardDetails";
 
 export default function Main({ searchTerm, selectedCategory, addToCart }) {
   const [products, setProducts] = useState([]);
@@ -59,8 +60,6 @@ export default function Main({ searchTerm, selectedCategory, addToCart }) {
     const res = await fetch(`https://dummyjson.com/products/${id}`);
     const item = await res.json();
     setSelectedProduct(item);
-
-    console.log(`${item.title} has been added to cart. It costs ${item.price}`);
   }
 
   function closeModal() {
@@ -82,6 +81,14 @@ export default function Main({ searchTerm, selectedCategory, addToCart }) {
           />
         ))}
       </div>
+
+      {selectedProduct && (
+        <ItemCardDetails
+          product={selectedProduct}
+          onClose={closeModal}
+          addToCart={addToCart}
+        />
+      )}
     </>
   );
 }

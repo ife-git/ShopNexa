@@ -13,7 +13,17 @@ export default function App() {
   const [cart, setCart] = React.useState([]);
 
   function addToCart(item) {
-    setCart((prev) => [...prev, item]);
+    setCart((prev) => {
+      const existing = prev.find((p) => p.id === item.id);
+
+      if (existing) {
+        return prev.map((p) =>
+          p.id === item.id ? { ...p, quantity: p.quantity + item.quantity } : p
+        );
+      }
+
+      return [...prev, item];
+    });
   }
 
   function removeFromCart(indexToRemove) {
@@ -37,9 +47,7 @@ export default function App() {
       <div className="button-container">
         <div className="left-nav">
           <div className="home-icon">
-            <Link to="/" className="button">
-              <img src={Logo} alt="Shop Nexa" className="logo-img" />
-            </Link>
+            <img src={Logo} alt="Shop Nexa" className="logo-img" />
           </div>
 
           <Link to="/" className="button">

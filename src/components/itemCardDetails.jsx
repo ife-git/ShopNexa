@@ -8,7 +8,7 @@ export default function ItemCardDetails({ product, onClose, addToCart }) {
   }
 
   function minus() {
-    setQuantity((q) => Math.max(1, q));
+    setQuantity((q) => Math.max(1, q - 1));
   }
   function handleAddToCart() {
     addToCart({ ...product, quantity: quantity });
@@ -38,7 +38,7 @@ export default function ItemCardDetails({ product, onClose, addToCart }) {
             -{" "}
           </button>
           <button className="add-to-cart-btn" onClick={handleAddToCart}>
-            Add to Cart 🛒 {quantity}
+            Add ( {quantity} ) to Cart 🛒
           </button>
           <button className="quant-btn" onClick={plus}>
             {" "}

@@ -3,7 +3,7 @@ import "./App.css";
 import Main from "./components/main";
 import Contact from "./components/contact";
 import Cart from "./components/cart";
-import Logo from "./assets/logo.png";
+import Logo from "./assets/Shop-Nexa-logo.png";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 export default function App() {

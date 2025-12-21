@@ -34,7 +34,8 @@ export default function Cart({ cartItems, removeFromCart }) {
       <h2 className="total-price">
         🧾 Total Cost: $
         {cartItems
-          .reduce((total, item) => (total + item.price) * item.quantity, 0)
+          .reduce((total, item) => total + item.price * item.quantity, 0)
+
           .toFixed(2)}
       </h2>
     </>

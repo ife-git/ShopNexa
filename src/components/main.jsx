@@ -1,52 +1,70 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ItemCard from "./itemCard";
 import ItemCardDetails from "./itemCardDetails";
 
 export default function Main({ searchTerm, selectedCategory, addToCart }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [noResults, setNoResults] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Load all products
-  React.useEffect(() => {
+  /* ================= LOAD ALL PRODUCTS ================= */
+  useEffect(() => {
+    if (selectedCategory !== "") return;
+
     async function loadAll() {
+      setLoading(true);
+      setNoResults(false);
+
       const res = await fetch("https://dummyjson.com/products");
       const data = await res.json();
+
       setProducts(data.products);
+      setLoading(false);
     }
-    if (selectedCategory === "") {
-      loadAll();
-    }
+
+    loadAll();
   }, [selectedCategory]);
 
-  // Load products by category
-  React.useEffect(() => {
+  /* ================= LOAD BY CATEGORY ================= */
+  useEffect(() => {
     if (selectedCategory === "") return;
 
     async function loadCategory() {
+      setLoading(true);
+      setNoResults(false);
+
       const res = await fetch(
         `https://dummyjson.com/products/category/${selectedCategory}`
       );
       const data = await res.json();
+
       setProducts(data.products);
+      setLoading(false);
     }
 
     loadCategory();
   }, [selectedCategory]);
 
-  // Search logic
-  React.useEffect(() => {
-    if (searchTerm.trim() === "") return;
+  /* ================= SEARCH ================= */
+  useEffect(() => {
+    if (searchTerm.trim() === "") {
+      setNoResults(false);
+      return;
+    }
 
     async function search() {
       setLoading(true);
+      setNoResults(false);
+
       try {
         const res = await fetch(
           `https://dummyjson.com/products/search?q=${searchTerm}`
         );
         const data = await res.json();
+
         setProducts(data.products);
+        setNoResults(data.products.length === 0);
       } finally {
         setLoading(false);
       }
@@ -55,7 +73,7 @@ export default function Main({ searchTerm, selectedCategory, addToCart }) {
     search();
   }, [searchTerm]);
 
-  // Handle clicking a product
+  /* ================= PRODUCT CLICK ================= */
   async function handleProductClick(id) {
     const res = await fetch(`https://dummyjson.com/products/${id}`);
     const item = await res.json();
@@ -68,19 +86,30 @@ export default function Main({ searchTerm, selectedCategory, addToCart }) {
 
   return (
     <>
-      {loading && <h2>Loading...</h2>}
+      {loading && <h2 style={{ textAlign: "center" }}>Loading...</h2>}
 
-      <div className="products-grid">
-        {products.map((p) => (
-          <ItemCard
-            key={p.id}
-            title={p.title}
-            price={p.price}
-            image={p.thumbnail}
-            onClick={() => handleProductClick(p.id)}
-          />
-        ))}
-      </div>
+      {!loading && noResults && (
+        <div style={{ textAlign: "center", marginTop: "40px" }}>
+          <h2> Sorry, no product found ❌</h2>
+          <p style={{ color: "#666" }}>
+            Try checking your spelling or searching something else.
+          </p>
+        </div>
+      )}
+
+      {!loading && products.length > 0 && (
+        <div className="products-grid">
+          {products.map((p) => (
+            <ItemCard
+              key={p.id}
+              title={p.title}
+              price={p.price}
+              image={p.thumbnail}
+              onClick={() => handleProductClick(p.id)}
+            />
+          ))}
+        </div>
+      )}
 
       {selectedProduct && (
         <ItemCardDetails
